@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
 
         int line_number = 1;
         std::string value;
+        size_t start;
 
         for (size_t i = 0; i < file_contents.size(); ++i) {
             char c = file_contents[i];
@@ -84,7 +85,7 @@ int main(int argc, char *argv[]) {
                     }
                     break;
                 case '"':
-                    size_t start = i;
+                    start = i;
                     while (i < file_contents.size() && file_contents[i] != '"') {
                         if (file_contents[i] == '\n') {
                             ++line_number;
