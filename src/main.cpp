@@ -53,9 +53,9 @@ int main(int argc, char *argv[]) {
                     std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
                     ret_val = 65;
                     break;
-            }
-            std::cout << "EOF  null" << std::endl;
+            } 
         }
+        std::cout << "EOF  null" << std::endl;
         
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
