@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
                         while (i < file_contents.size() && file_contents[i] != '\n') {
                             i++;
                         }
+                        ++line_number;
                     } else {
                         std::cout << "SLASH / null" << std::endl;
                     }
