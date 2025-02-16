@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
                     break;
                 case '"':
                     start = i;
-                    while (i < file_contents.size() && file_contents[i] != '"') {
+                    while (i + 1 < file_contents.size() && file_contents[i] != '"') {
                         if (file_contents[i] == '\n') {
                             ++line_number;
                         }
