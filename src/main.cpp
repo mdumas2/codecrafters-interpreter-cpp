@@ -82,6 +82,22 @@ int main(int argc, char *argv[]) {
                         std::cout << "SLASH / null" << std::endl;
                     }
                     break;
+                case '"':
+                    size_t start = i;
+                    while (i < file_contents.size() && file_contents[i] != '"') {
+                        if (file_contents[i] == '\n') {
+                            ++line_number;
+                        }
+                        ++i;
+                    }
+                    if (i == file_contents.size()) {
+                        std::cerr << "[line " << line_number << "] Error: Unterminated string." << c << std::endl; 
+                        ret_val = 65;
+                    }
+                    ++i;
+                    std::string value = file_contents.substr(start + 1, i - start - 2);
+                    std::cout << "STRING " << value << " " << value << std::endl;
+                    break;
                 case '\t':
                 case ' ':
                     continue;
