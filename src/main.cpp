@@ -83,9 +83,9 @@ int main(int argc, char *argv[]) {
                     break;
                 case '\t':
                 case ' ':
-                    break;
+                    continue;
                 case '\n': 
-                    line_number++; 
+                    ++line_number; 
                     break;
                 default: 
                     std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
