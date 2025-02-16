@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
             }
         }
         
+        std::cout << "EOF  null" << std::endl; // Placeholder, remove this line when implementing the scanner
+        
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
