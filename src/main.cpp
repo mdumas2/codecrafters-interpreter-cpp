@@ -81,6 +81,9 @@ int main(int argc, char *argv[]) {
                         std::cout << "SLASH / null" << std::endl;
                     }
                     break;
+                case '\t':
+                case ' ':
+                    break;
                 case '\n': 
                     line_number++; 
                     break;
