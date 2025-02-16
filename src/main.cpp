@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
         std::string file_contents = read_file_contents(argv[2]);
 
         int line_number = 1;
+        std::string value;
 
         for (size_t i = 0; i < file_contents.size(); ++i) {
             char c = file_contents[i];
@@ -95,7 +96,7 @@ int main(int argc, char *argv[]) {
                         ret_val = 65;
                     }
                     ++i;
-                    std::string value = file_contents.substr(start + 1, i - start - 2);
+                    value = file_contents.substr(start + 1, i - start - 2);
                     std::cout << "STRING " << value << " " << value << std::endl;
                     break;
                 case '\t':
