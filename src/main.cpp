@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
                     if (i == file_contents.size()) {
                         std::cerr << "[line " << line_number << "] Error: Unterminated string." << std::endl;
                         ret_val = 65;
-                        break;
+                        return;
                     }  
                     value = file_contents.substr(start, i - start);
                     std::cout << "STRING \"" << value << "\" " << value << std::endl;
