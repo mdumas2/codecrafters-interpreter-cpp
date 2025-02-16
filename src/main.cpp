@@ -47,6 +47,14 @@ int main(int argc, char *argv[]) {
                         std::cout << "EQUAL = null" << std::endl;
                     }
                     break;
+                case '!': 
+                    if (i + 1 < file_contents.size() && file_contents[i + 1] == '=') {
+                        std::cout << "BANG_EQUAL != null" << std::endl;
+                        i++;
+                    } else {
+                        std::cout << "BANG ! null" << std::endl;
+                    }
+                    break;
                 case '\n': 
                     line_number++; 
                     break;
