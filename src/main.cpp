@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
                     }
                     break;
                 case '"':
-                    size_t start = i + 1;
+                    start = i + 1;
                     while (i + 1 < file_contents.size() && file_contents[++i] != '"') {
                         if (file_contents[i] == '\n') {
                             ++line_number;
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
                         ret_val = 65;
                         break;
                     }
-                    std::string value = file_contents.substr(start, i - start);
+                    value = file_contents.substr(start, i - start);
                     std::cout << "STRING \"" << value << "\" \"" << value << "\"" << std::endl;
                     ++i;
                     break;
