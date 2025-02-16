@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 
     if (command == "tokenize") {
         std::string file_contents = read_file_contents(argv[2]);
-        
+        int line_number = 1; // Start from line 1
         for (auto c: file_contents) {
             switch (c) {
                 case '(': std::cout << "LEFT_PAREN ( null" << std::endl; break;
@@ -33,6 +33,10 @@ int main(int argc, char *argv[]) {
                 case '*': std::cout << "STAR * null" << std::endl; break;
                 case '-': std::cout << "MINUS - null" << std::endl; break;
                 case '+': std::cout << "PLUS + null" << std::endl; break;
+                case '\n': line_number++; break;  // Increment line number on each newline
+                default: 
+                    std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
+                    return 65;
             }
         }
         
