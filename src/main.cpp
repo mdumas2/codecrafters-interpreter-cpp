@@ -101,8 +101,9 @@ int main(int argc, char *argv[]) {
                     std::cout << "STRING " << value << " " << value << std::endl;
                     break;
                 case '\t':
+                case '\r':
                 case ' ':
-                    continue;
+                    break;
                 case '\n': 
                     ++line_number; 
                     break;
