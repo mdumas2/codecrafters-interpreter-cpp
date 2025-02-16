@@ -21,14 +21,14 @@ int main(int argc, char *argv[]) {
     if (command == "tokenize") {
         std::string file_contents = read_file_contents(argv[2]);
         
-        for (auto content: file_contents) {
-            switch (content) {
+        for (auto c: file_contents) {
+            switch (c) {
                 case '(': std::cout << "LEFT_PAREN ( null" << std::endl; break;
-                case ')': std::cout << "RIGTH_PAREN ) null" << std::endl; break;
+                case ')': std::cout << "RIGHT_PAREN ) null" << std::endl; break;
             }
         }
         
-        std::cout << "EOF  null" << std::endl; // Placeholder, remove this line when implementing the scanner
+        std::cout << "EOF  null" << std::endl;
         
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
