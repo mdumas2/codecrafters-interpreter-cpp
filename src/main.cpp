@@ -25,7 +25,9 @@ int main(int argc, char *argv[]) {
 
         int line_number = 1;
 
-        for (auto c: file_contents) {
+        for (auto it = file_contents.cbegin(); it != file_contents.cend(); ++it) {
+            char c = *it;
+            
             switch (c) {
                 case '(': std::cout << "LEFT_PAREN ( null" << std::endl; break;
                 case ')': std::cout << "RIGHT_PAREN ) null" << std::endl; break;
@@ -37,9 +39,16 @@ int main(int argc, char *argv[]) {
                 case '*': std::cout << "STAR * null" << std::endl; break;
                 case '-': std::cout << "MINUS - null" << std::endl; break;
                 case '+': std::cout << "PLUS + null" << std::endl; break;
-                case '=': std::cout << "EQUAL = null" << std::endl; break;
-                case '==': std::cout << "EQUAL_EQUAL == null" << std::endl; break;
-                case '\n': line_number++; break;
+                case '=':
+                    if (std::next(it) != file_contents.cend() && *std::next(it) == '=') {
+                        std::cout << "EQUAL_EQUAL == null" << std::endl;
+                    } else {
+                        std::cout << "EQUAL = null" << std::endl;
+                    }
+                    break;
+                case '\n': 
+                    line_number++; 
+                    break;
                 default: 
                     std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
                     ret_val = 65;
