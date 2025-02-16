@@ -91,6 +91,7 @@ int main(int argc, char *argv[]) {
                             ++line_number;
                         }
                     }
+                    ++i;
                     if (i == file_contents.size()) {
                         std::cerr << "[line " << line_number << "] Error: Unterminated string." << std::endl; 
                         ret_val = 65;
@@ -98,7 +99,6 @@ int main(int argc, char *argv[]) {
                     }
                     value = file_contents.substr(start, i - start);
                     std::cout << "STRING \"" << value << "\" " << value << std::endl;
-                    ++i;
                     break;
                 case '\t':
                 case '\r':
