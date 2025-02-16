@@ -71,6 +71,16 @@ int main(int argc, char *argv[]) {
                         std::cout << "GREATER > null" << std::endl;
                     }
                     break;
+                case '/': 
+                    if (i + 1 < file_contents.size() && file_contents[i + 1] == '/') {
+                        i += 2;
+                        while (i < file_contents.size() && file_contents[i] != '\n') {
+                            i++;
+                        }
+                    } else {
+                        std::cout << "SLASH / null" << std::endl;
+                    }
+                    break;
                 case '\n': 
                     line_number++; 
                     break;
