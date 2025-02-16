@@ -86,10 +86,11 @@ int main(int argc, char *argv[]) {
                     break;
                 case '"':
                     start = i + 1;
-                    while (i + 1 < file_contents.size() && file_contents[++i] != '"') {
+                    while (i + 1 < file_contents.size() && file_contents[i+1] != '"') {
                         if (file_contents[i] == '\n') {
                             ++line_number;
                         }
+                        i++;
                     }
                     if (i == file_contents.size()) {
                         std::cerr << "[line " << line_number << "] Error: Unterminated string." << std::endl;
