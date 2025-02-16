@@ -85,18 +85,20 @@ int main(int argc, char *argv[]) {
                     }
                     break;
                 case '"':
-                    start = i;
-                    while (i + 1 < file_contents.size() && file_contents[i] != '"') {
+                    size_t start = i + 1;
+                    while (i + 1 < file_contents.size() && file_contents[++i] != '"') {
                         if (file_contents[i] == '\n') {
                             ++line_number;
                         }
-                        i++;
                     }
                     if (i == file_contents.size()) {
-                        std::cerr << "[line " << line_number << "] Error: Unterminated string." << c << std::endl; 
+                        std::cerr << "[line " << line_number << "] Error: Unterminated string." << std::endl; 
+                        ret_val = 65;
+                        break;
                     }
-                    value = file_contents.substr(start, i - start - 1);
-                    std::cout << "STRING " << value << " " << value << std::endl;
+                    std::string value = file_contents.substr(start, i - start);
+                    std::cout << "STRING \"" << value << "\" \"" << value << "\"" << std::endl;
+                    ++i;
                     break;
                 case '\t':
                 case '\r':
