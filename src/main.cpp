@@ -89,7 +89,6 @@ int main(int argc, char *argv[]) {
                     break;
                 default: 
                     std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
-                    line_number++; 
                     ret_val = 65;
                     break;
             }
