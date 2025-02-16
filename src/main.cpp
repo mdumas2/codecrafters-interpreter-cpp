@@ -84,9 +84,9 @@ int main(int argc, char *argv[]) {
                         std::cout << "SLASH / null" << std::endl;
                     }
                     break;
-                case '"':
+                case '\"':
                     start = i;
-                    while (i < file_contents.size() && file_contents[i] != '"') {
+                    while (i < file_contents.size() && file_contents[i] != '\"') {
                         if (file_contents[i] == '\n') {
                             ++line_number;
                         }
