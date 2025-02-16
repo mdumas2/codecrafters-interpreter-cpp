@@ -90,14 +90,14 @@ int main(int argc, char *argv[]) {
                         if (file_contents[i] == '\n') {
                             ++line_number;
                         }
-                        ++i;
+                        i++;
                     }
                     if (i == file_contents.size()) {
                         std::cerr << "[line " << line_number << "] Error: Unterminated string." << c << std::endl; 
                         ret_val = 0;
                     }
-                    ++i;
-                    value = file_contents.substr(start + 1, i - start - 2);
+                    i++;
+                    value = file_contents.substr(start, i - start - 2);
                     std::cout << "STRING " << value << " " << value << std::endl;
                     break;
                 case '\t':
