@@ -22,9 +22,14 @@ int main(int argc, char *argv[]) {
         std::string file_contents = read_file_contents(argv[2]);
         
         if (!file_contents.empty()) {
-            std::cerr << "Scanner not implemented" << std::endl;
-            return 1;
+            for (auto content: file_contents) {
+                switch (content) {
+                    case '(': std::cout << "LEFT_PAREN ( null" << std::endl; break;
+                    case ')': std::cout << "RIGTH_PAREN ) null" << std::endl; break;
+                }
+            }
         }
+        
         std::cout << "EOF  null" << std::endl; // Placeholder, remove this line when implementing the scanner
         
     } else {
