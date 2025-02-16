@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
         std::string file_contents = read_file_contents(argv[2]);
 
         int line_number = 1;
-        
+
         for (auto c: file_contents) {
             switch (c) {
                 case '(': std::cout << "LEFT_PAREN ( null" << std::endl; break;
@@ -37,6 +37,8 @@ int main(int argc, char *argv[]) {
                 case '*': std::cout << "STAR * null" << std::endl; break;
                 case '-': std::cout << "MINUS - null" << std::endl; break;
                 case '+': std::cout << "PLUS + null" << std::endl; break;
+                case '=': std::cout << "EQUAL = null" << std::endl; break;
+                case '==': std::cout << "EQUAL_EQUAL == null" << std::endl; break;
                 case '\n': line_number++; break;
                 default: 
                     std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
