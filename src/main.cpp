@@ -122,6 +122,14 @@ int main(int argc, char *argv[]) {
                         } else {
                             std::cout << "NUMBER " << number << " " << num << std::endl;
                         }
+                    } else if (std::isalpha(c) || c == '_') {
+                        size_t start = i;
+                        while (i < file_contents.size() && (std::isalnum(file_contents[i]) || file_contents[i] == '_')) {
+                            ++i;
+                        }
+                        std::string identifier = file_contents.substr(start, i - start);
+                        std::cout << "IDENTIFIER " << identifier << " null" << std::endl;
+                        --i;
                     } else {
                         std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
                         ret_val = 65;
