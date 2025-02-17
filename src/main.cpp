@@ -116,9 +116,10 @@ int main(int argc, char *argv[]) {
                         }
                         std::string number = file_contents.substr(start, i - start + 1);
                         std::cout << "NUMBER " << number << " " << number << std::endl;
+                    } else {
+                        std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
+                        ret_val = 65;
                     }
-                    std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
-                    ret_val = 65;
                     break;
             }
         }
