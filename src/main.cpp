@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <iomanip>
 
 std::string read_file_contents(const std::string& filename);
 
