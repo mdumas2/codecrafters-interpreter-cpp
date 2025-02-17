@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
                         }
                         std::string identifier = file_contents.substr(start, i - start);
                         if (reservedWords.find(identifier) != reservedWords.end()) {
-                            std::cout << "KEYWORD " << identifier << std::endl;
+                            std::cout << "KEYWORD " << identifier << " null" << std::endl;
                         } else {
                             std::cout << "IDENTIFIER " << identifier << " null" << std::endl;
                         }
