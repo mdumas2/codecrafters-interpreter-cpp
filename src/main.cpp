@@ -115,7 +115,12 @@ int main(int argc, char *argv[]) {
                             i++;
                         }
                         std::string number = file_contents.substr(start, i - start + 1);
-                        std::cout << "NUMBER " << number << " " << std::stof(number) << std::endl;
+                        float num = std::stof(number);
+                        if (num == static_cast<int>(num)) {
+                            std::cout << "NUMBER " << number << " " << std::fixed << std::setprecision(1) << num << std::endl;
+                        } else {
+                            std::cout << "NUMBER " << number << " " << num << std::endl;
+                        }
                     } else {
                         std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
                         ret_val = 65;
