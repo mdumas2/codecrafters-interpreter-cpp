@@ -4,8 +4,14 @@
 #include <sstream>
 #include <string>
 #include <iomanip>
+#include <unordered_set>
 
 std::string read_file_contents(const std::string& filename);
+
+std::unordered_set<std::string> reservedWords = {
+    "and", "class", "else", "false", "for", "fun", "if", "nil", "or", 
+    "print", "return", "super", "this", "true", "var", "while"
+};
 
 int main(int argc, char *argv[]) {
     // Disable output buffering
@@ -128,7 +134,11 @@ int main(int argc, char *argv[]) {
                             ++i;
                         }
                         std::string identifier = file_contents.substr(start, i - start);
-                        std::cout << "IDENTIFIER " << identifier << " null" << std::endl;
+                        if (reservedWords.find(identifier) != reservedWords.end()) {
+                            std::cout << "KEYWORD " << identifier << std::endl;
+                        } else {
+                            std::cout << "IDENTIFIER " << identifier << " null" << std::endl;
+                        }
                         --i;
                     } else {
                         std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
