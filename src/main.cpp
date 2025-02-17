@@ -108,7 +108,15 @@ int main(int argc, char *argv[]) {
                 case '\n': 
                     ++line_number; 
                     break;
-                default: 
+                default:
+                    if (isdigit(c)) {
+                        size_t start = i;
+                        while (i + 1 < file_contents.size() && (isdigit(file_contents[i + 1]) || file_contents[i + 1] == '.')) {
+                            i++;
+                        }
+                        std::string number = file_contents.substr(start, i - start + 1);
+                        std::cout << "NUMBER " << number << " " << number << std::endl;
+                    }
                     std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl; 
                     ret_val = 65;
                     break;
