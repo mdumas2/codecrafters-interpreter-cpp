@@ -20,7 +20,7 @@ std::string format_token(const Token& token) {
 }
 
 std::string format_token_lexeme(const Token& token) {
-    return token.lexeme;
+    return token.literal;
 }
 
 int main(int argc, char* argv[]) {
