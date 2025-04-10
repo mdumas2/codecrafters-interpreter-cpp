@@ -170,7 +170,7 @@ void Scanner::scan_number() {
 
     double value = std::stod(lexeme);
     std::ostringstream oss;
-    oss << std::fixed << std::setprecision(1) << value;
+    oss << std::fixed << std::setprecision(14) << value;
     literal = oss.str();
 
     add_token(TokenType::NUMBER, literal);
