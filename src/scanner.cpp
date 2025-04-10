@@ -121,8 +121,18 @@ std::expected<std::vector<Token>, int> Scanner::scan_tokens() {
 }
 
 void Scanner::add_token(TokenType type, const std::string& literal) {
-    std::string lexeme = source.substr(start, current - start);
+    std::string lexeme = get_canonical_lexeme(type);
+    if (lexeme.empty()) {
+        lexeme = source.substr(start, current - start);
+    }
     tokens.push_back({type, lexeme, literal, line});
+}
+
+std::string get_canonical_lexeme(TokenType type) {
+    for (const auto& entry : TOKEN_TABLE) {
+        if (entry.type == type) return entry.lexeme;
+    }
+    return "";
 }
 
 char Scanner::advance() { return source[current++]; }

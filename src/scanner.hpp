@@ -46,6 +46,7 @@ public:
 
 private:
     void add_token(TokenType type, const std::string& literal = "");
+    std::string get_canonical_lexeme(TokenType type);
     void scan_string(int& ret_val);
     void scan_number();
     void scan_identifier();
