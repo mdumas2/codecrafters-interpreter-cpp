@@ -37,14 +37,14 @@ int main(int argc, char* argv[]) {
 
     if (command == "tokenize") {
         Scanner scanner;
-        auto [tokens, err] = scan_tokens(src);
+        auto [tokens, err] = scanner.scan_tokens(file_content);
         for (const auto& token : tokens) {
             std::cout << format_token(token) << std::endl;
         }
         if (err != 0) return err;
     } else if (command == "parse"){
         Scanner scanner;
-        auto [tokens, err] = scan_tokens(src);
+        auto [tokens, err] = scanner.scan_tokens(file_content);
         for (const auto& token : tokens) {
             std::cout << format_token_lexeme(token) << std::endl;
         }
