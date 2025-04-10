@@ -168,10 +168,25 @@ void Scanner::scan_number() {
     std::string lexeme = source.substr(start, current - start);
     std::string literal;
 
-    double value = std::stod(lexeme);
-    std::ostringstream oss;
-    oss << std::fixed << std::setprecision(14) << value;
-    literal = oss.str();
+    if (is_float) {
+        double value = std::stod(lexeme);
+        std::ostringstream oss;
+        oss << std::setprecision(17) << std::noshowpoint << value;
+
+        // Remove trailing zeros if any
+        literal = oss.str();
+        // But keep a single .0 if the user typed it
+        if (literal.find('.') != std::string::npos) {
+            // Trim trailing zeros
+            literal.erase(literal.find_last_not_of('0') + 1, std::string::npos);
+            // If it ends with a dot, add one zero
+            if (literal.back() == '.') {
+                literal += '0';
+            }
+        }
+    } else {
+        literal = lexeme;
+    }
 
     add_token(TokenType::NUMBER, literal);
 }
