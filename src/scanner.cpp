@@ -146,14 +146,18 @@ void Scanner::scan_string(int& ret_val) {
         if (peek() == '\n') line++;
         advance();
     }
+
     if (is_at_end()) {
         std::cerr << "[line " << line << "] Error: Unterminated string.\n";
         ret_val = 65;
         return;
     }
-    advance();
-    std::string value = source.substr(start + 1, current - start - 2);
-    add_token(TokenType::STRING, value);
+
+    advance(); // consume closing "
+    std::string lexeme = source.substr(start, current - start);         // includes quotes
+    std::string literal = source.substr(start + 1, current - start - 2); // without quotes
+
+    add_token(TokenType::STRING, lexeme, literal);
 }
 
 void Scanner::scan_number() {
