@@ -50,6 +50,6 @@ int main(int argc, char* argv[]) {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
     }
-    if (err != 0) return err;
-    return 0;
+    
+    return err;
 }
