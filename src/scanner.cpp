@@ -2,10 +2,7 @@
 
 #include <iostream>
 #include <unordered_set>
-#include <iomanip>
 #include <algorithm>
-#include <sstream>
-#include <cctype>
 
 std::unordered_set<std::string> reservedWords = {
     "if", "else", "while", "for", "return", "true", "false", "class", "var", "fun", "print", "nil", "this", "super"
