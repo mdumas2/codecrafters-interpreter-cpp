@@ -27,11 +27,6 @@ int main(int argc, char* argv[]) {
     std::cout << std::unitbuf;
     std::cerr << std::unitbuf;
 
-    if (argc < 3) {
-        std::cerr << "Usage: ./your_program tokenize <filename>" << std::endl;
-        return 1;
-    }
-
     const std::string command = argv[1];
     std::string file_content = read_file_contents(argv[2]);
 
@@ -50,6 +45,6 @@ int main(int argc, char* argv[]) {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
     }
-    
+
     return err;
 }
