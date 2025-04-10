@@ -128,7 +128,7 @@ void Scanner::add_token(TokenType type, const std::string& literal) {
     tokens.push_back({type, lexeme, literal, line});
 }
 
-std::string get_canonical_lexeme(TokenType type) {
+std::string Scanner::get_canonical_lexeme(TokenType type) {
     for (const auto& entry : TOKEN_TABLE) {
         if (entry.type == type) return entry.lexeme;
     }
