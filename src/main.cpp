@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     int ret_val = 0;
 
     if (command == "tokenize") {
-        auto result = tokenizer(&file_content);
+        auto result = tokenizer(file_content);
     
         if (result.has_value()) {
             for (const auto& token : result.value()) {

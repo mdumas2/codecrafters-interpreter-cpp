@@ -1,5 +1,6 @@
+#include "scanner.hpp"
+
 #include <iostream>
-#include <string>
 #include <unordered_set>
 #include <iomanip>
 #include <algorithm>
