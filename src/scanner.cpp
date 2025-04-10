@@ -107,10 +107,11 @@ std::expected<std::vector<std::string>, int> tokenizer(std::string& file_content
                     float num = std::stof(number);
                     std::ostringstream oss;
                     if (num == static_cast<int>(num)) {
-                        tokens.push_back("NUMBER " + number + " " + std::fixed + std::setprecision(1) + num);
+                        oss << "NUMBER " << number << " " << std::fixed << std::setprecision(1) << num;
                     } else {
-                        tokens.push_back("NUMBER " + number + " " + num);
+                        oss << "NUMBER " << number << " " << num;
                     }
+                    tokens.push_back(oss.str());
                 } else if (std::isalpha(c) || c == '_') {
                     size_t start = i;
                     while (i < file_content.size() && (std::isalnum(file_content[i]) || file_content[i] == '_')) {
