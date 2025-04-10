@@ -36,12 +36,14 @@ int main(int argc, char *argv[]) {
         }
     } else if (command == "parse"){
 
-        int line_number = 1;
-        std::string value;
-        size_t start;
-
-        for (size_t i = 0; i < file_content.size(); ++i) {
-            char c = file_content[i];
+        auto result = tokenizer(file_content);
+    
+        if (result.has_value()) {
+            for (const auto& token : result.value()) {
+                std::cout << token << std::endl;
+            }
+        } else {
+            std::cerr << "Tokenizer failed with error code: " << result.error() << std::endl;
         }
         
     } else {
