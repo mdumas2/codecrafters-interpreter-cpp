@@ -45,6 +45,18 @@ int main(int argc, char* argv[]) {
             std::cerr << "Tokenizer failed with error code: " << result.error() << std::endl;
             return result.error();
         }
+    } else if (command == "parse"){
+        init_token_maps();
+        Scanner scanner(file_content);
+        auto result = scanner.scan_tokens();
+    
+        if (result.has_value()) {
+            for (const auto& token : result.value()) {
+                std::cout << token << std::endl;
+            }
+        } else {
+            std::cerr << "Tokenizer failed with error code: " << result.error() << std::endl;
+        }
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
