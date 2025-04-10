@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <cmath>
 
-
 struct TokenInfo {
     std::string name;
     std::string lexeme;
@@ -175,7 +174,7 @@ void Scanner::scan_number() {
     std::ostringstream oss;
     oss << std::fixed;
 
-    if (is_float || (!(std::floor(value) == value))) {
+    if (is_float || ((std::floor(value) == value))) {
         oss << std::defaultfloat << lexeme;
         literal = oss.str();
     } else {
