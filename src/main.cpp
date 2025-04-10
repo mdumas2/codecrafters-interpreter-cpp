@@ -16,7 +16,7 @@ std::string read_file_contents(const std::string& filename) {
 }
 
 std::string format_token(const Token& token) {
-    return " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
+    return token.name + " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
 }
 
 std::string format_token_lexeme(const Token& token) {
