@@ -35,24 +35,21 @@ int main(int argc, char* argv[]) {
     const std::string command = argv[1];
     std::string file_content = read_file_contents(argv[2]);
 
+    Scanner scanner;
+    auto [tokens, err] = scanner.scan_tokens(file_content);
+
     if (command == "tokenize") {
-        Scanner scanner;
-        auto [tokens, err] = scanner.scan_tokens(file_content);
         for (const auto& token : tokens) {
             std::cout << format_token(token) << std::endl;
         }
-        if (err != 0) return err;
     } else if (command == "parse"){
-        Scanner scanner;
-        auto [tokens, err] = scanner.scan_tokens(file_content);
         for (const auto& token : tokens) {
             std::cout << format_token_lexeme(token) << std::endl;
         }
-        if (err != 0) return err;
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
     }
-
+    if (err != 0) return err;
     return 0;
 }
