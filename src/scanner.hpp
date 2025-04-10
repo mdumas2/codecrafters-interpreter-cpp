@@ -35,11 +35,6 @@ struct Token {
     int line;
 };
 
-struct TokenResult {
-    std::vector<Token> tokens;
-    std::optional<int> error_code;
-};
-
 class Scanner {
 public:
     std::pair<std::vector<Token>, int> scan_tokens(std::string& src);
