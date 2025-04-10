@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     
         if (result.has_value()) {
             for (const auto& token : result.value()) {
-                std::cout << token << std::endl;
+                std::cout << format_token(token) << std::endl;
             }
         } else {
             std::cerr << "Tokenizer failed with error code: " << result.error() << std::endl;
