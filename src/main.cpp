@@ -44,7 +44,6 @@ int main(int argc, char* argv[]) {
                 std::cout << format_token(token) << std::endl;
             }
         } else {
-            std::cerr << "Tokenizer failed with error code: " << result.error() << std::endl;
             return result.error();
         }
     } else if (command == "parse"){
@@ -56,7 +55,7 @@ int main(int argc, char* argv[]) {
                 std::cout << format_token_lexeme(token) << std::endl;
             }
         } else {
-            std::cerr << "Tokenizer failed with error code: " << result.error() << std::endl;
+            return result.error();
         }
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
