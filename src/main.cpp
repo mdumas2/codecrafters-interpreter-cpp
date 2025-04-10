@@ -49,7 +49,6 @@ int main(int argc, char* argv[]) {
     } else if (command == "parse"){
         Scanner scanner;
         auto result = scanner.scan_tokens(file_content);
-    
         if (result.has_value()) {
             for (const auto& token : result.value()) {
                 std::cout << format_token_lexeme(token) << std::endl;
