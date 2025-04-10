@@ -37,25 +37,18 @@ int main(int argc, char* argv[]) {
 
     if (command == "tokenize") {
         Scanner scanner;
-        auto result = scanner.scan_tokens(file_content);
-
-        if (result.has_value()) {
-            for (const auto& token : result.value()) {
-                std::cout << format_token(token) << std::endl;
-            }
-        } else {
-            return result.error();
+        auto [tokens, err] = scan_tokens(src);
+        for (const auto& token : tokens) {
+            std::cout << format_token(token) << std::endl;
         }
+        if (err != 0) return err;
     } else if (command == "parse"){
         Scanner scanner;
-        auto result = scanner.scan_tokens(file_content);
-        if (result.has_value()) {
-            for (const auto& token : result.value()) {
-                std::cout << format_token_lexeme(token) << std::endl;
-            }
-        } else {
-            return result.error();
+        auto [tokens, err] = scan_tokens(src);
+        for (const auto& token : tokens) {
+            std::cout << format_token_lexeme(token) << std::endl;
         }
+        if (err != 0) return err;
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;

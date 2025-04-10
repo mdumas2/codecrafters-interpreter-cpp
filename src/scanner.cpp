@@ -56,7 +56,7 @@ std::unordered_map<TokenType, TokenInfo> TOKEN_INFO_MAP = {
     {TokenType::EOF_TOKEN, {"EOF", "", false}},
 };
 
-std::expected<std::vector<Token>, int> Scanner::scan_tokens(std::string& src) {
+std::pair<std::vector<Token>, int> Scanner::scan_tokens(std::string& src) {
     source = src;
     start = 0;
     current = 0;
@@ -110,7 +110,7 @@ std::expected<std::vector<Token>, int> Scanner::scan_tokens(std::string& src) {
 
     start = current;
     add_token(TokenType::EOF_TOKEN);
-    return ret_val == 0 ? std::expected<std::vector<Token>, int>{tokens} : std::unexpected(ret_val);
+    return {tokens, ret_val};
 }
 
 std::string Scanner::get_name(TokenType type) {
