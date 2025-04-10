@@ -33,20 +33,12 @@ struct Token {
     int line;
 };
 
-extern std::unordered_map<std::string, TokenType> keywords;
-extern std::unordered_map<std::string, TokenType> symbols;
-extern std::unordered_map<TokenType, std::string> typeToString;
-
-void init_token_maps();
-
 class Scanner {
 public:
-    Scanner(std::string& src) : source(src), start(0), current(0), line(1) {}
-    std::expected<std::vector<Token>, int> scan_tokens();
+    std::expected<std::vector<Token>, int> scan_tokens(std::string& src);
 
 private:
     void add_token(TokenType type, const std::string& literal = "");
-    std::string get_canonical_lexeme(TokenType type);
     void scan_string(int& ret_val);
     void scan_number();
     void scan_identifier();

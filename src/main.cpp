@@ -16,12 +16,10 @@ std::string read_file_contents(const std::string& filename) {
 }
 
 std::string format_token(const Token& token) {
-    std::string name = typeToString[token.type];
-    return name + " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
+    return " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
 }
 
 std::string format_token_lexeme(const Token& token) {
-    std::string name = typeToString[token.type];
     return token.lexeme;
 }
 
@@ -38,9 +36,8 @@ int main(int argc, char* argv[]) {
     std::string file_content = read_file_contents(argv[2]);
 
     if (command == "tokenize") {
-        init_token_maps();
-        Scanner scanner(file_content);
-        auto result = scanner.scan_tokens();
+        Scanner scanner;
+        auto result = scanner.scan_tokens(file_content);
 
         if (result.has_value()) {
             for (const auto& token : result.value()) {
@@ -51,9 +48,8 @@ int main(int argc, char* argv[]) {
             return result.error();
         }
     } else if (command == "parse"){
-        init_token_maps();
-        Scanner scanner(file_content);
-        auto result = scanner.scan_tokens();
+        Scanner scanner;
+        auto result = scanner.scan_tokens(file_content);
     
         if (result.has_value()) {
             for (const auto& token : result.value()) {

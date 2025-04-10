@@ -5,69 +5,57 @@
 #include <algorithm>
 
 struct TokenInfo {
-    TokenType type;
     std::string name;
     std::string lexeme;
     bool is_keyword;
 };
 
-const std::vector<TokenInfo> TOKEN_TABLE = {
-    {TokenType::LEFT_PAREN,  "LEFT_PAREN",  "(",   false},
-    {TokenType::RIGHT_PAREN, "RIGHT_PAREN", ")",   false},
-    {TokenType::LEFT_BRACE,  "LEFT_BRACE",  "{",   false},
-    {TokenType::RIGHT_BRACE, "RIGHT_BRACE", "}",   false},
-    {TokenType::COMMA,       "COMMA",       ",",   false},
-    {TokenType::DOT,         "DOT",         ".",   false},
-    {TokenType::MINUS,       "MINUS",       "-",   false},
-    {TokenType::PLUS,        "PLUS",        "+",   false},
-    {TokenType::SEMICOLON,   "SEMICOLON",   ";",   false},
-    {TokenType::SLASH,       "SLASH",       "/",   false},
-    {TokenType::STAR,        "STAR",        "*",   false},
-    {TokenType::BANG,        "BANG",        "!",   false},
-    {TokenType::BANG_EQUAL,  "BANG_EQUAL",  "!=",  false},
-    {TokenType::EQUAL,       "EQUAL",       "=",   false},
-    {TokenType::EQUAL_EQUAL, "EQUAL_EQUAL", "==",  false},
-    {TokenType::GREATER,     "GREATER",     ">",   false},
-    {TokenType::GREATER_EQUAL, "GREATER_EQUAL", ">=", false},
-    {TokenType::LESS,        "LESS",        "<",   false},
-    {TokenType::LESS_EQUAL,  "LESS_EQUAL",  "<=",  false},
+std::unordered_map<TokenType, TokenInfo> TOKEN_INFO_MAP = {
+    {TokenType::LEFT_PAREN,  {"LEFT_PAREN",  "(",   false}},
+    {TokenType::RIGHT_PAREN, {"RIGHT_PAREN", ")",   false}},
+    {TokenType::LEFT_BRACE,  {"LEFT_BRACE",  "{",   false}},
+    {TokenType::RIGHT_BRACE, {"RIGHT_BRACE", "}",   false}},
+    {TokenType::COMMA,       {"COMMA",       ",",   false}},
+    {TokenType::DOT,         {"DOT",         ".",   false}},
+    {TokenType::MINUS,       {"MINUS",       "-",   false}},
+    {TokenType::PLUS,        {"PLUS",        "+",   false}},
+    {TokenType::SEMICOLON,   {"SEMICOLON",   ";",   false}},
+    {TokenType::SLASH,       {"SLASH",       "/",   false}},
+    {TokenType::STAR,        {"STAR",        "*",   false}},
+    {TokenType::BANG,        {"BANG",        "!",   false}},
+    {TokenType::BANG_EQUAL,  {"BANG_EQUAL",  "!=",  false}},
+    {TokenType::EQUAL,       {"EQUAL",       "=",   false}},
+    {TokenType::EQUAL_EQUAL, {"EQUAL_EQUAL", "==",  false}},
+    {TokenType::GREATER,     {"GREATER",     ">",   false}},
+    {TokenType::GREATER_EQUAL, {"GREATER_EQUAL", ">=", false}},
+    {TokenType::LESS,        {"LESS",        "<",   false}},
+    {TokenType::LESS_EQUAL,  {"LESS_EQUAL",  "<=",  false}},
 
-    {TokenType::AND,   "AND",   "and",   true},
-    {TokenType::CLASS, "CLASS", "class", true},
-    {TokenType::ELSE,  "ELSE",  "else",  true},
-    {TokenType::FALSE, "FALSE", "false", true},
-    {TokenType::FUN,   "FUN",   "fun",   true},
-    {TokenType::FOR,   "FOR",   "for",   true},
-    {TokenType::IF,    "IF",    "if",    true},
-    {TokenType::NIL,   "NIL",   "nil",   true},
-    {TokenType::OR,    "OR",    "or",    true},
-    {TokenType::PRINT, "PRINT", "print", true},
-    {TokenType::RETURN,"RETURN","return",true},
-    {TokenType::SUPER, "SUPER", "super", true},
-    {TokenType::THIS,  "THIS",  "this",  true},
-    {TokenType::TRUE,  "TRUE",  "true",  true},
-    {TokenType::VAR,   "VAR",   "var",   true},
-    {TokenType::WHILE, "WHILE", "while", true},
+    {TokenType::AND,   {"AND",   "and",   true}},
+    {TokenType::CLASS, {"CLASS", "class", true}},
+    {TokenType::ELSE,  {"ELSE",  "else",  true}},
+    {TokenType::FALSE, {"FALSE", "false", true}},
+    {TokenType::FUN,   {"FUN",   "fun",   true}},
+    {TokenType::FOR,   {"FOR",   "for",   true}},
+    {TokenType::IF,    {"IF",    "if",    true}},
+    {TokenType::NIL,   {"NIL",   "nil",   true}},
+    {TokenType::OR,    {"OR",    "or",    true}},
+    {TokenType::PRINT, {"PRINT", "print", true}},
+    {TokenType::RETURN,{"RETURN","return",true}},
+    {TokenType::SUPER, {"SUPER", "super", true}},
+    {TokenType::THIS,  {"THIS",  "this",  true}},
+    {TokenType::TRUE,  {"TRUE",  "true",  true}},
+    {TokenType::VAR,   {"VAR",   "var",   true}},
+    {TokenType::WHILE, {"WHILE", "while", true}},
 
-    {TokenType::EOF_TOKEN, "EOF", "", false},
+    {TokenType::EOF_TOKEN, {"EOF", "", false}},
 };
 
-std::unordered_map<std::string, TokenType> keywords;
-std::unordered_map<std::string, TokenType> symbols;
-std::unordered_map<TokenType, std::string> typeToString;
-
-void init_token_maps() {
-    for (const auto& token : TOKEN_TABLE) {
-        typeToString[token.type] = token.name;
-        if (token.is_keyword) {
-            keywords[token.lexeme] = token.type;
-        } else if (!token.lexeme.empty()) {
-            symbols[token.lexeme] = token.type;
-        }
-    }
-}
-
-std::expected<std::vector<Token>, int> Scanner::scan_tokens() {
+std::expected<std::vector<Token>, int> Scanner::scan_tokens(std::string& src) {
+    source = src;
+    start = 0;
+    current = 0;
+    line = 1;
     int ret_val = 0;
 
     while (!is_at_end()) {
@@ -121,18 +109,8 @@ std::expected<std::vector<Token>, int> Scanner::scan_tokens() {
 }
 
 void Scanner::add_token(TokenType type, const std::string& literal) {
-    std::string lexeme = get_canonical_lexeme(type);
-    if (lexeme.empty()) {
-        lexeme = source.substr(start, current - start);
-    }
+    std::string lexeme = source.substr(start, current - start);
     tokens.push_back({type, lexeme, literal, line});
-}
-
-std::string Scanner::get_canonical_lexeme(TokenType type) {
-    for (const auto& entry : TOKEN_TABLE) {
-        if (entry.type == type) return entry.lexeme;
-    }
-    return "";
 }
 
 char Scanner::advance() { return source[current++]; }
@@ -169,5 +147,5 @@ void Scanner::scan_number() {
 void Scanner::scan_identifier() {
     while (std::isalnum(peek()) || peek() == '_') advance();
     std::string text = source.substr(start, current - start);
-    add_token(TokenType::IDENTIFIER);
+    add_token(keywords.contains(text) ? keywords[text] : TokenType::IDENTIFIER);
 }
