@@ -174,10 +174,8 @@ void Scanner::scan_number() {
     oss << std::fixed;
 
     if (is_float) {
-        oss << std::setprecision(17) << value;
+        oss << std::defaultfloat << value;
         literal = oss.str();
-        literal.erase(literal.find_last_not_of('0') + 1);
-        if (literal.back() == '.') literal += '0';
     } else {
         oss << std::setprecision(1) << value;
         literal = oss.str();
