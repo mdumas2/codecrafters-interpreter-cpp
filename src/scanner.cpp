@@ -108,6 +108,23 @@ std::expected<std::vector<Token>, int> Scanner::scan_tokens(std::string& src) {
     return ret_val == 0 ? std::expected<std::vector<Token>, int>{tokens} : std::unexpected(ret_val);
 }
 
+std::string Scanner::get_name(TokenType type) {
+    auto it = TOKEN_INFO_MAP.find(type);
+    if (it != TOKEN_INFO_MAP.end()) {
+        return it->second.name;
+    }
+    return "UNKNOWN";
+}
+
+bool Scanner::is_keyword(const std::string& word) {
+    for (const auto& [type, info] : TOKEN_INFO_MAP) {
+        if (info.is_keyword && info.lexeme == word) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Scanner::add_token(TokenType type, const std::string& literal) {
     std::string lexeme = source.substr(start, current - start);
     tokens.push_back({type, lexeme, literal, line});
@@ -147,5 +164,5 @@ void Scanner::scan_number() {
 void Scanner::scan_identifier() {
     while (std::isalnum(peek()) || peek() == '_') advance();
     std::string text = source.substr(start, current - start);
-    add_token(keywords.contains(text) ? keywords[text] : TokenType::IDENTIFIER);
+    add_token(is_keyword(text) ? keywords[text] : TokenType::IDENTIFIER);
 }

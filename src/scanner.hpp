@@ -36,9 +36,11 @@ struct Token {
 class Scanner {
 public:
     std::expected<std::vector<Token>, int> scan_tokens(std::string& src);
+    std::string get_name(TokenType type);
 
 private:
     void add_token(TokenType type, const std::string& literal = "");
+    bool is_keyword(const std::string& word);
     void scan_string(int& ret_val);
     void scan_number();
     void scan_identifier();
