@@ -1,215 +1,163 @@
 #include "scanner.hpp"
 
 #include <iostream>
-#include <unordered_set>
-#include <algorithm>
 #include <iomanip>
+#include <algorithm>
 
-enum class TokenType {
-    LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
-    COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
-
-    BANG, BANG_EQUAL,
-    EQUAL, EQUAL_EQUAL,
-    GREATER, GREATER_EQUAL,
-    LESS, LESS_EQUAL,
-
-    IDENTIFIER, STRING, NUMBER,
-
-    // Keywords
-    AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
-    PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
-
-    ERROR, EOF_TOKEN
+struct TokenInfo {
+    TokenType type;
+    std::string name;
+    std::string lexeme;
+    bool is_keyword;
 };
 
-std::string tokenTypeToString(TokenType type) {
-    switch (type) {
-        case TokenType::LEFT_PAREN:  return "LEFT_PAREN";
-        case TokenType::RIGHT_PAREN: return "RIGHT_PAREN";
-        case TokenType::LEFT_BRACE:  return "LEFT_BRACE";
-        case TokenType::RIGHT_BRACE: return "RIGHT_BRACE";
-        case TokenType::COMMA:       return "COMMA";
-        case TokenType::DOT:         return "DOT";
-        case TokenType::MINUS:       return "MINUS";
-        case TokenType::PLUS:        return "PLUS";
-        case TokenType::SEMICOLON:   return "SEMICOLON";
-        case TokenType::SLASH:       return "SLASH";
-        case TokenType::STAR:        return "STAR";
-        case TokenType::BANG:        return "BANG";
-        case TokenType::BANG_EQUAL:  return "BANG_EQUAL";
-        case TokenType::EQUAL:       return "EQUAL";
-        case TokenType::EQUAL_EQUAL: return "EQUAL_EQUAL";
-        case TokenType::GREATER:     return "GREATER";
-        case TokenType::GREATER_EQUAL: return "GREATER_EQUAL";
-        case TokenType::LESS:        return "LESS";
-        case TokenType::LESS_EQUAL:  return "LESS_EQUAL";
-        case TokenType::IDENTIFIER:  return "IDENTIFIER";
-        case TokenType::STRING:      return "STRING";
-        case TokenType::NUMBER:      return "NUMBER";
-        case TokenType::AND:         return "AND";
-        case TokenType::CLASS:       return "CLASS";
-        case TokenType::ELSE:        return "ELSE";
-        case TokenType::FALSE:       return "FALSE";
-        case TokenType::FOR:         return "FOR";
-        case TokenType::FUN:         return "FUN";
-        case TokenType::IF:          return "IF";
-        case TokenType::NIL:         return "NIL";
-        case TokenType::OR:          return "OR";
-        case TokenType::PRINT:       return "PRINT";
-        case TokenType::RETURN:      return "RETURN";
-        case TokenType::SUPER:       return "SUPER";
-        case TokenType::THIS:        return "THIS";
-        case TokenType::TRUE:        return "TRUE";
-        case TokenType::VAR:         return "VAR";
-        case TokenType::WHILE:       return "WHILE";
-        case TokenType::ERROR:       return "ERROR";
-        case TokenType::EOF_TOKEN:         return "EOF";
-        default:                return "UNKNOWN";
+const std::vector<TokenInfo> TOKEN_TABLE = {
+    {TokenType::LEFT_PAREN,  "LEFT_PAREN",  "(",   false},
+    {TokenType::RIGHT_PAREN, "RIGHT_PAREN", ")",   false},
+    {TokenType::LEFT_BRACE,  "LEFT_BRACE",  "{",   false},
+    {TokenType::RIGHT_BRACE, "RIGHT_BRACE", "}",   false},
+    {TokenType::COMMA,       "COMMA",       ",",   false},
+    {TokenType::DOT,         "DOT",         ".",   false},
+    {TokenType::MINUS,       "MINUS",       "-",   false},
+    {TokenType::PLUS,        "PLUS",        "+",   false},
+    {TokenType::SEMICOLON,   "SEMICOLON",   ";",   false},
+    {TokenType::SLASH,       "SLASH",       "/",   false},
+    {TokenType::STAR,        "STAR",        "*",   false},
+    {TokenType::BANG,        "BANG",        "!",   false},
+    {TokenType::BANG_EQUAL,  "BANG_EQUAL",  "!=",  false},
+    {TokenType::EQUAL,       "EQUAL",       "=",   false},
+    {TokenType::EQUAL_EQUAL, "EQUAL_EQUAL", "==",  false},
+    {TokenType::GREATER,     "GREATER",     ">",   false},
+    {TokenType::GREATER_EQUAL, "GREATER_EQUAL", ">=", false},
+    {TokenType::LESS,        "LESS",        "<",   false},
+    {TokenType::LESS_EQUAL,  "LESS_EQUAL",  "<=",  false},
+
+    {TokenType::AND,   "AND",   "and",   true},
+    {TokenType::CLASS, "CLASS", "class", true},
+    {TokenType::ELSE,  "ELSE",  "else",  true},
+    {TokenType::FALSE, "FALSE", "false", true},
+    {TokenType::FUN,   "FUN",   "fun",   true},
+    {TokenType::FOR,   "FOR",   "for",   true},
+    {TokenType::IF,    "IF",    "if",    true},
+    {TokenType::NIL,   "NIL",   "nil",   true},
+    {TokenType::OR,    "OR",    "or",    true},
+    {TokenType::PRINT, "PRINT", "print", true},
+    {TokenType::RETURN,"RETURN","return",true},
+    {TokenType::SUPER, "SUPER", "super", true},
+    {TokenType::THIS,  "THIS",  "this",  true},
+    {TokenType::TRUE,  "TRUE",  "true",  true},
+    {TokenType::VAR,   "VAR",   "var",   true},
+    {TokenType::WHILE, "WHILE", "while", true},
+
+    {TokenType::EOF_TOKEN, "EOF", "", false},
+};
+
+std::unordered_map<std::string, TokenType> keywords;
+std::unordered_map<std::string, TokenType> symbols;
+std::unordered_map<TokenType, std::string> typeToString;
+
+void init_token_maps() {
+    for (const auto& token : TOKEN_TABLE) {
+        typeToString[token.type] = token.name;
+        if (token.is_keyword) {
+            keywords[token.lexeme] = token.type;
+        } else if (!token.lexeme.empty()) {
+            symbols[token.lexeme] = token.type;
+        }
     }
 }
 
-struct Token {
-    TokenType type;
-    std::string lexeme;
-    std::string literal;
-    int line;
-};
-
-std::unordered_set<std::string> reservedWords = {
-    "if", "else", "while", "for", "return", "true", "false", "class", "var", "fun", "print", "nil", "this", "super"
-};
-
-std::expected<std::vector<std::string>, int> tokenizer(std::string& file_content) {
+std::expected<std::vector<Token>, int> Scanner::scan_tokens() {
     int ret_val = 0;
-    int line_number = 1;
-    std::vector<std::string> tokens;
-    std::string value;
-    size_t start;
 
-    for (size_t i = 0; i < file_content.size(); ++i) {
-        char c = file_content[i];
+    while (!is_at_end()) {
+        start = current;
+        char c = advance();
 
         switch (c) {
-            case '(': tokens.push_back("LEFT_PAREN ( null"); break;
-            case ')': tokens.push_back("RIGHT_PAREN ) null"); break;
-            case '{': tokens.push_back("LEFT_BRACE { null"); break;
-            case '}': tokens.push_back("RIGHT_BRACE } null"); break;
-            case '.': tokens.push_back("DOT . null"); break;
-            case ',': tokens.push_back("COMMA , null"); break;
-            case ';': tokens.push_back("SEMICOLON ; null"); break;
-            case '*': tokens.push_back("STAR * null"); break;
-            case '-': tokens.push_back("MINUS - null"); break;
-            case '+': tokens.push_back("PLUS + null"); break;
-            case '=': 
-                if (i + 1 < file_content.size() && file_content[i + 1] == '=') {
-                    tokens.push_back("EQUAL_EQUAL == null");
-                    i++;
+            case '(': add_token(TokenType::LEFT_PAREN); break;
+            case ')': add_token(TokenType::RIGHT_PAREN); break;
+            case '{': add_token(TokenType::LEFT_BRACE); break;
+            case '}': add_token(TokenType::RIGHT_BRACE); break;
+            case ',': add_token(TokenType::COMMA); break;
+            case '.': add_token(TokenType::DOT); break;
+            case '-': add_token(TokenType::MINUS); break;
+            case '+': add_token(TokenType::PLUS); break;
+            case ';': add_token(TokenType::SEMICOLON); break;
+            case '*': add_token(TokenType::STAR); break;
+            case '!': add_token(match('=') ? TokenType::BANG_EQUAL : TokenType::BANG); break;
+            case '=': add_token(match('=') ? TokenType::EQUAL_EQUAL : TokenType::EQUAL); break;
+            case '<': add_token(match('=') ? TokenType::LESS_EQUAL : TokenType::LESS); break;
+            case '>': add_token(match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER); break;
+            case '/':
+                if (match('/')) {
+                    while (peek() != '\n' && !is_at_end()) advance();
                 } else {
-                    tokens.push_back("EQUAL = null");
+                    add_token(TokenType::SLASH);
                 }
                 break;
-            case '!': 
-                if (i + 1 < file_content.size() && file_content[i + 1] == '=') {
-                    tokens.push_back("BANG_EQUAL != null");
-                    i++;
-                } else {
-                    tokens.push_back("BANG ! null");
-                }
-                break;
-            case '<': 
-                if (i + 1 < file_content.size() && file_content[i + 1] == '=') {
-                    tokens.push_back("LESS_EQUAL <= null");
-                    i++;
-                } else {
-                    tokens.push_back("LESS < null");
-                }
-                break;
-            case '>': 
-                if (i + 1 < file_content.size() && file_content[i + 1] == '=') {
-                    tokens.push_back("GREATER_EQUAL >= null");
-                    i++;
-                } else {
-                    tokens.push_back("GREATER > null");
-                }
-                break;
-            case '/': 
-                if (i + 1 < file_content.size() && file_content[i + 1] == '/') {
-                    i += 2;
-                    while (i < file_content.size() && file_content[i] != '\n') {
-                        i++;
-                    }
-                    ++line_number;
-                } else {
-                    tokens.push_back("SLASH / null");
-                }
-                break;
-            case '"':
-                start = i + 1;
-                while (i + 1 < file_content.size() && file_content[i + 1] != '"') {
-                    if (file_content[i + 1] == '\n') {
-                        ++line_number;
-                    }
-                    i++;
-                }
-                i++;
-                if (i == file_content.size()) {
-                    std::cerr << "[line " << line_number << "] Error: Unterminated string." << std::endl;
-                    ret_val = 65;
-                    break;
-                }
-                value = file_content.substr(start, i - start);
-                tokens.push_back("STRING \"" + value + "\" " + value);
-                break;
-            case '\t':
-            case '\r':
             case ' ':
+            case '\r':
+            case '\t':
                 break;
             case '\n':
-                ++line_number;
+                line++;
                 break;
+            case '"': scan_string(ret_val); break;
             default:
-                if (isdigit(c)) {
-                    size_t start = i;
-                    while (i + 1 < file_content.size() && (isdigit(file_content[i + 1]) || file_content[i + 1] == '.')) {
-                        i++;
-                    }
-                    std::string number = file_content.substr(start, i - start + 1);
-                    float num = std::stof(number);
-                    std::ostringstream oss;
-                    if (num == static_cast<int>(num)) {
-                        oss << "NUMBER " << number << " " << std::fixed << std::setprecision(1) << num;
-                    } else {
-                        oss << "NUMBER " << number << " " << num;
-                    }
-                    tokens.push_back(oss.str());
-                } else if (std::isalpha(c) || c == '_') {
-                    size_t start = i;
-                    while (i < file_content.size() && (std::isalnum(file_content[i]) || file_content[i] == '_')) {
-                        ++i;
-                    }
-                    std::string identifier = file_content.substr(start, i - start);
-                    if (reservedWords.find(identifier) != reservedWords.end()) {
-                        std::string upper_identifier = identifier;
-                        std::transform(upper_identifier.begin(), upper_identifier.end(), upper_identifier.begin(), ::toupper);
-                        tokens.push_back(upper_identifier + " " + identifier + " null");
-                    } else {
-                        tokens.push_back("IDENTIFIER " + identifier + " null");
-                    }
-                    --i;
-                } else {
-                    std::cerr << "[line " << line_number << "] Error: Unexpected character: " << c << std::endl;
+                if (std::isdigit(c)) scan_number();
+                else if (std::isalpha(c) || c == '_') scan_identifier();
+                else {
+                    std::cerr << "[line " << line << "] Error: Unexpected character: " << c << "\n";
                     ret_val = 65;
                 }
                 break;
         }
     }
 
-    tokens.push_back("EOF  null");
+    start = current;
+    add_token(TokenType::EOF_TOKEN);
+    return ret_val == 0 ? std::expected<std::vector<Token>, int>{tokens} : std::unexpected(ret_val);
+}
 
-    if (ret_val == 0) {
-        return tokens;
-    } else {
-        return std::unexpected(ret_val);
+void Scanner::add_token(TokenType type, const std::string& literal) {
+    std::string lexeme = source.substr(start, current - start);
+    tokens.push_back({type, lexeme, literal, line});
+}
+
+char Scanner::advance() { return source[current++]; }
+char Scanner::peek() { return is_at_end() ? '\0' : source[current]; }
+char Scanner::peek_next() { return (current + 1 < source.size()) ? source[current + 1] : '\0'; }
+bool Scanner::match(char expected) { if (is_at_end() || source[current] != expected) return false; current++; return true; }
+bool Scanner::is_at_end() { return current >= source.size(); }
+
+void Scanner::scan_string(int& ret_val) {
+    while (peek() != '"' && !is_at_end()) {
+        if (peek() == '\n') line++;
+        advance();
     }
+    if (is_at_end()) {
+        std::cerr << "[line " << line << "] Error: Unterminated string.\n";
+        ret_val = 65;
+        return;
+    }
+    advance();
+    std::string value = source.substr(start + 1, current - start - 2);
+    add_token(TokenType::STRING, value);
+}
+
+void Scanner::scan_number() {
+    while (std::isdigit(peek())) advance();
+    if (peek() == '.' && std::isdigit(peek_next())) {
+        advance();
+        while (std::isdigit(peek())) advance();
+    }
+    std::string number = source.substr(start, current - start);
+    add_token(TokenType::NUMBER, number);
+}
+
+void Scanner::scan_identifier() {
+    while (std::isalnum(peek()) || peek() == '_') advance();
+    std::string text = source.substr(start, current - start);
+    add_token(keywords.contains(text) ? keywords[text] : TokenType::IDENTIFIER);
 }

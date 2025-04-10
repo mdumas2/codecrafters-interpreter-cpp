@@ -1,14 +1,26 @@
+#include "scanner.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <string>
 
-#include "scanner.hpp"
+std::string read_file_contents(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file) {
+        std::cerr << "Error: Could not open file: " << filename << std::endl;
+        exit(1);
+    }
+    std::ostringstream ss;
+    ss << file.rdbuf();
+    return ss.str();
+}
 
-std::string read_file_contents(const std::string& filename);
+std::string format_token(const Token& token) {
+    std::string name = typeToString[token.type];
+    return name + " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
+}
 
-int main(int argc, char *argv[]) {
-    // Disable output buffering
+int main(int argc, char* argv[]) {
     std::cout << std::unitbuf;
     std::cerr << std::unitbuf;
 
@@ -20,48 +32,23 @@ int main(int argc, char *argv[]) {
     const std::string command = argv[1];
     std::string file_content = read_file_contents(argv[2]);
 
-    int ret_val = 0;
-
     if (command == "tokenize") {
-        auto result = tokenizer(file_content);
-    
-        if (result.has_value()) {
-            for (const auto& token : result.value()) {
-                std::cout << token << std::endl;
-            }
-        } else {
-            std::cerr << "Tokenizer failed with error code: " << result.error() << std::endl;
-        }
-    } else if (command == "parse"){
+        init_token_maps();
+        Scanner scanner(file_content);
+        auto result = scanner.scan_tokens();
 
-        auto result = tokenizer(file_content);
-    
         if (result.has_value()) {
             for (const auto& token : result.value()) {
-                std::cout << token << std::endl;
+                std::cout << format_token(token) << std::endl;
             }
         } else {
             std::cerr << "Tokenizer failed with error code: " << result.error() << std::endl;
+            return result.error();
         }
-        
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
     }
 
-    return ret_val;
-}
-
-std::string read_file_contents(const std::string& filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Error reading file: " << filename << std::endl;
-        std::exit(1);
-    }
-
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    file.close();
-
-    return buffer.str();
+    return 0;
 }
