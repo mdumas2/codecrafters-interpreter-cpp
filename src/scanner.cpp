@@ -159,5 +159,6 @@ void Scanner::scan_number() {
 void Scanner::scan_identifier() {
     while (std::isalnum(peek()) || peek() == '_') advance();
     std::string text = source.substr(start, current - start);
+    std::cout << "Text is: " << text << std::endl;
     add_token(keywords.contains(text) ? keywords[text] : TokenType::IDENTIFIER);
 }
