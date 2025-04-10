@@ -221,16 +221,16 @@ public:
     }
 };
 
-int main() {
-    std::string input = R"(
-        var x = 42;
-        if (x >= 10) {
-            print("x is large");
-        }
-    )";
-
-    Lexer lexer(input);
-    lexer.scan_tokens();
-
-    return 0;
-}
+//int main() {
+//    std::string input = R"(
+//        var x = 42;
+//        if (x >= 10) {
+//            print("x is large");
+//        }
+//    )";
+//
+//    Lexer lexer(input);
+//    lexer.scan_tokens();
+//
+//    return 0;
+//}
