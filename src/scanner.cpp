@@ -127,7 +127,7 @@ TokenType Scanner::get_token_type_for_identifier(const std::string& word) {
 
 void Scanner::add_token(TokenType type, const std::string& literal) {
     std::string lexeme = source.substr(start, current - start);
-    tokens.push_back({type, lexeme, literal, line});
+    tokens.push_back({type, get_name(type), lexeme, literal, line});
 }
 
 char Scanner::advance() { return source[current++]; }
