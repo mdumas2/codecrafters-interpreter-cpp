@@ -150,6 +150,7 @@ void Scanner::scan_string(int& ret_val) {
     if (is_at_end()) {
         std::cerr << "[line " << line << "] Error: Unterminated string.\n";
         ret_val = 65;
+        return;
     }
 
     advance(); // consume closing "
