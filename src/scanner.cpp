@@ -180,6 +180,7 @@ void Scanner::scan_number() {
         if (literal.back() == '.') literal += '0';
     } else {
         oss << std::setprecision(1) << value;
+        literal = oss.str();
     }
 
     add_token(TokenType::NUMBER, literal);
