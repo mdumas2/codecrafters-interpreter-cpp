@@ -169,9 +169,12 @@ void Scanner::scan_number() {
     double value = std::stod(lexeme);
 
     std::ostringstream literal_oss;
+
     if (is_float) {
-        literal_oss << lexeme;
+        // Use defaultfloat, but trim trailing zeros
+        literal_oss << std::defaultfloat << value;
     } else {
+        // For integers, output with ".0"
         literal_oss << std::fixed << std::setprecision(1) << value;
     }
 
