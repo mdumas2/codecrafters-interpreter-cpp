@@ -154,10 +154,9 @@ void Scanner::scan_string(int& ret_val) {
     }
 
     advance(); // consume closing "
-    std::string lexeme = source.substr(start, current - start);         // includes quotes
     std::string literal = source.substr(start + 1, current - start - 2); // without quotes
 
-    add_token(TokenType::STRING, lexeme, literal);
+    add_token(TokenType::STRING, literal);
 }
 
 void Scanner::scan_number() {
