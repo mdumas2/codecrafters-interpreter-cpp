@@ -170,9 +170,9 @@ void Scanner::scan_number() {
 
     std::ostringstream literal_oss;
     if (is_float) {
-        literal_oss << std::defaultfloat << value; // full float formatting
+        literal_oss << lexeme;
     } else {
-        literal_oss << std::fixed << std::setprecision(1) << value; // force .0 for integers
+        literal_oss << std::fixed << std::setprecision(1) << value;
     }
 
     add_token(TokenType::NUMBER, literal_oss.str());
