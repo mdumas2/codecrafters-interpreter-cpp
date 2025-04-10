@@ -48,6 +48,10 @@ std::unordered_map<TokenType, TokenInfo> TOKEN_INFO_MAP = {
     {TokenType::VAR,   {"VAR",   "var",   true}},
     {TokenType::WHILE, {"WHILE", "while", true}},
 
+    {TokenType::IDENTIFIER, {"IDENTIFIER", "", false}},
+    {TokenType::STRING,     {"STRING",     "", false}},
+    {TokenType::NUMBER,     {"NUMBER",     "", false}},
+    
     {TokenType::EOF_TOKEN, {"EOF", "", false}},
 };
 
