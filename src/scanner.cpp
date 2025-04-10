@@ -159,5 +159,5 @@ void Scanner::scan_number() {
 void Scanner::scan_identifier() {
     while (std::isalnum(peek()) || peek() == '_') advance();
     std::string text = source.substr(start, current - start);
-    add_token(TokenType::IDENTIFIER, text);
+    add_token(TokenType::IDENTIFIER);
 }
