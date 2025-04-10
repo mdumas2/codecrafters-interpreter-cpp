@@ -3,6 +3,8 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <cmath>
+
 
 struct TokenInfo {
     std::string name;
