@@ -20,6 +20,11 @@ std::string format_token(const Token& token) {
     return name + " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
 }
 
+std::string format_token_lexeme(const Token& token) {
+    std::string name = typeToString[token.type];
+    return token.lexeme;
+}
+
 int main(int argc, char* argv[]) {
     std::cout << std::unitbuf;
     std::cerr << std::unitbuf;
@@ -52,7 +57,7 @@ int main(int argc, char* argv[]) {
     
         if (result.has_value()) {
             for (const auto& token : result.value()) {
-                std::cout << format_token(token) << std::endl;
+                std::cout << format_token_lexeme(token) << std::endl;
             }
         } else {
             std::cerr << "Tokenizer failed with error code: " << result.error() << std::endl;
