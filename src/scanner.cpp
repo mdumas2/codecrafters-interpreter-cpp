@@ -161,27 +161,21 @@ void Scanner::scan_number() {
     bool is_float = false;
     if (peek() == '.' && std::isdigit(peek_next())) {
         is_float = true;
-        advance();
+        advance(); // consume '.'
         while (std::isdigit(peek())) advance();
     }
 
     std::string lexeme = source.substr(start, current - start);
-    std::string literal;
-
     double value = std::stod(lexeme);
 
-    std::ostringstream oss;
-    oss << std::fixed;
-
+    std::ostringstream literal_oss;
     if (is_float) {
-        oss << std::defaultfloat << value;
-        literal = oss.str();
+        literal_oss << std::defaultfloat << value; // full float formatting
     } else {
-        oss << std::setprecision(1) << value;
-        literal = oss.str();
+        literal_oss << std::fixed << std::setprecision(1) << value; // force .0 for integers
     }
 
-    add_token(TokenType::NUMBER, literal);
+    add_token(TokenType::NUMBER, literal_oss.str());
 }
 
 void Scanner::scan_identifier() {
