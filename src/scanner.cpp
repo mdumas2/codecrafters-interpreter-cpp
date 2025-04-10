@@ -51,7 +51,7 @@ std::unordered_map<TokenType, TokenInfo> TOKEN_INFO_MAP = {
     {TokenType::IDENTIFIER, {"IDENTIFIER", "", false}},
     {TokenType::STRING,     {"STRING",     "", false}},
     {TokenType::NUMBER,     {"NUMBER",     "", false}},
-    
+
     {TokenType::EOF_TOKEN, {"EOF", "", false}},
 };
 
@@ -157,12 +157,23 @@ void Scanner::scan_string(int& ret_val) {
 
 void Scanner::scan_number() {
     while (std::isdigit(peek())) advance();
+
+    bool is_float = false;
     if (peek() == '.' && std::isdigit(peek_next())) {
+        is_float = true;
         advance();
         while (std::isdigit(peek())) advance();
     }
-    std::string number = source.substr(start, current - start);
-    add_token(TokenType::NUMBER, number);
+
+    std::string lexeme = source.substr(start, current - start);
+    std::string literal;
+
+    double value = std::stod(lexeme);
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(1) << value;
+    literal = oss.str();
+
+    add_token(TokenType::NUMBER, literal);
 }
 
 void Scanner::scan_identifier() {
