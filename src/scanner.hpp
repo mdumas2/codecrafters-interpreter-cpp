@@ -40,7 +40,7 @@ public:
 
 private:
     void add_token(TokenType type, const std::string& literal = "");
-    bool is_keyword(const std::string& word);
+    TokenType get_token_type_for_identifier(const std::string& word);
     void scan_string(int& ret_val);
     void scan_number();
     void scan_identifier();

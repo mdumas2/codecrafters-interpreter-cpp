@@ -116,13 +116,13 @@ std::string Scanner::get_name(TokenType type) {
     return "UNKNOWN";
 }
 
-bool Scanner::is_keyword(const std::string& word) {
+TokenType Scanner::get_token_type_for_identifier(const std::string& word) {
     for (const auto& [type, info] : TOKEN_INFO_MAP) {
         if (info.is_keyword && info.lexeme == word) {
-            return true;
+            return type;
         }
     }
-    return false;
+    return TokenType::IDENTIFIER;
 }
 
 void Scanner::add_token(TokenType type, const std::string& literal) {
@@ -164,5 +164,5 @@ void Scanner::scan_number() {
 void Scanner::scan_identifier() {
     while (std::isalnum(peek()) || peek() == '_') advance();
     std::string text = source.substr(start, current - start);
-    add_token(is_keyword(text) ? keywords[text] : TokenType::IDENTIFIER);
+    add_token(get_token_type_for_identifier(text));
 }
