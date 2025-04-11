@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "tokenizer.hpp"
+#include "parser.hpp"
 
 std::string read_file_contents(const std::string& filename) {
     std::ifstream file(filename);
@@ -25,14 +26,14 @@ int main(int argc, char* argv[]) {
     Tokenizer tokenizer;
     auto [tokens, err] = tokenizer.scan_tokens(file_content);
 
+    Parser parser;
+
     if (command == "tokenize") {
         for (const auto& token : tokens) {
             std::cout << lox::format_token(token) << std::endl;
         }
     } else if (command == "parse"){
-        for (const auto& token : tokens) {
-            std::cout << lox::format_token_lexeme(token) << std::endl;
-        }
+        parser.parse(tokens);
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
