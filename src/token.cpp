@@ -1,8 +1,6 @@
 #include "token.hpp"
 
-using namespace lox;
-
-const std::unordered_map<TokenType, TokenInfo>& get_map() {
+const std::unordered_map<TokenType, TokenInfo>& lox::get_map() {
     static const std::unordered_map<TokenType, TokenInfo> map = {
         {TokenType::LEFT_PAREN,  {"LEFT_PAREN",  "(",   false}},
         {TokenType::RIGHT_PAREN, {"RIGHT_PAREN", ")",   false}},
