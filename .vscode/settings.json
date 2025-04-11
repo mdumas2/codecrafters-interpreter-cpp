@@ -55,6 +55,7 @@
         "algorithm": "cpp",
         "unordered_set": "cpp",
         "expected": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "utility": "cpp"
     }
 }
