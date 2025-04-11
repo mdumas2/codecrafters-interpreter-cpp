@@ -33,7 +33,8 @@ int main(int argc, char* argv[]) {
             std::cout << lox::format_token(token) << std::endl;
         }
     } else if (command == "parse"){
-        parser.parse(tokens);
+        auto expr = parser.parse(tokens);
+        std::cout << expr.to_string() << std::endl;
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
