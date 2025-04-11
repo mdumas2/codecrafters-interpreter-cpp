@@ -38,7 +38,7 @@ struct TokenInfo {
     bool is_keyword;
 };
 
-std::unordered_map<TokenType, TokenInfo> TOKEN_INFO_MAP = {
+static std::unordered_map<TokenType, TokenInfo> TOKEN_INFO_MAP = {
     {TokenType::LEFT_PAREN,  {"LEFT_PAREN",  "(",   false}},
     {TokenType::RIGHT_PAREN, {"RIGHT_PAREN", ")",   false}},
     {TokenType::LEFT_BRACE,  {"LEFT_BRACE",  "{",   false}},
