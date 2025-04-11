@@ -8,7 +8,7 @@
 
 class Parser {
 public:
-    std::pair<std::vector<Token>, int> parser(std::string& src);
+    void parser();
 
 private:
 };
