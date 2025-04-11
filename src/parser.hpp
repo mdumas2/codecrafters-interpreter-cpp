@@ -24,7 +24,7 @@ public:
     std::shared_ptr<Expr> parse(const std::vector<Token>& tks);
 
 private:
-    std::vector<Token>& tokens;
+    std::vector<Token> tokens;
     int current = 0;
 
     std::shared_ptr<Expr> expression();
