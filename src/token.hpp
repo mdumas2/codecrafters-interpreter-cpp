@@ -82,11 +82,3 @@ std::unordered_map<TokenType, TokenInfo> TOKEN_INFO_MAP = {
 
     {TokenType::EOF_TOKEN, {"EOF", "", false}},
 };
-
-std::string format_token(const Token& token) {
-    return token.name + " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
-}
-
-std::string format_token_lexeme(const Token& token) {
-    return token.literal.empty() ? token.lexeme : token.literal;
-}

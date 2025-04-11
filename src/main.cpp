@@ -15,6 +15,14 @@ std::string read_file_contents(const std::string& filename) {
     return ss.str();
 }
 
+std::string format_token(const Token& token) {
+    return token.name + " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
+}
+
+std::string format_token_lexeme(const Token& token) {
+    return token.literal.empty() ? token.lexeme : token.literal;
+}
+
 int main(int argc, char* argv[]) {
     std::cout << std::unitbuf;
      std::cerr << std::unitbuf;
