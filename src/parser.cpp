@@ -1,5 +1,7 @@
 #include "parser.hpp"
 
+#include <stdexcept>
+
 LiteralExpr Parser::parse(const std::vector<Token>& tks) {
     tokens = tks;
     current = 0;
