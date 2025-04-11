@@ -11,7 +11,7 @@ LiteralExpr Parser::parse(const std::vector<Token>& tks) {
         }
 
         GroupingExpr group{expr};
-        return {Token{TokenType::STRING, "", "group " + expr.value.literal, 0}};
+        return {TokenType::STRING, "", "group " + expr.value.literal, 0};
     }
 
     return literal();
