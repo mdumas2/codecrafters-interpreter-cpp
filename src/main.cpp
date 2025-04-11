@@ -15,14 +15,6 @@ std::string read_file_contents(const std::string& filename) {
     return ss.str();
 }
 
-std::string format_token(const Token& token) {
-    return token.name + " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
-}
-
-std::string format_token_lexeme(const Token& token) {
-    return token.literal.empty() ? token.lexeme : token.literal;
-}
-
 int main(int argc, char* argv[]) {
     std::cout << std::unitbuf;
      std::cerr << std::unitbuf;
@@ -35,11 +27,11 @@ int main(int argc, char* argv[]) {
 
     if (command == "tokenize") {
         for (const auto& token : tokens) {
-            std::cout << format_token(token) << std::endl;
+            std::cout << lox::format_token(token) << std::endl;
         }
     } else if (command == "parse"){
         for (const auto& token : tokens) {
-            std::cout << format_token_lexeme(token) << std::endl;
+            std::cout << lox::format_token_lexeme(token) << std::endl;
         }
     } else {
         std::cerr << "Unknown command: " << command << std::endl;

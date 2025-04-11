@@ -40,4 +40,6 @@ struct TokenInfo {
 
 namespace lox {
     const std::unordered_map<TokenType, TokenInfo>& get_map();
+    std::string format_token(const Token& token);
+    std::string format_token_lexeme(const Token& token);
 }
