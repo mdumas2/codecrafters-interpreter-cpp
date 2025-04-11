@@ -1,39 +1,40 @@
-#include "parser.hpp"
-#include <stdexcept>
-
-Expr Parser::parse(const std::vector<Token>& tks) {
+LiteralExpr Parser::parse(const std::vector<Token>& tks) {
     tokens = tks;
     current = 0;
-    return expression();
-}
 
-Expr Parser::expression() {
-    if (match({TokenType::LEFT_PAREN})) {
-        Expr inner = expression();
-        if (!match({TokenType::RIGHT_PAREN})) {
+    if (match(TokenType::LEFT_PAREN)) {
+        LiteralExpr expr = expression();
+        if (!match(TokenType::RIGHT_PAREN)) {
             throw std::runtime_error("Expected ')' after expression.");
         }
-        return GroupingExpr{inner};
+
+        GroupingExpr group{expr};
+        return {Token{TokenType::STRING, "", "group " + expr.value.literal, 0}};
     }
 
     return literal();
 }
 
-Expr Parser::literal() {
-    if (match({TokenType::STRING, TokenType::NUMBER,
-               TokenType::TRUE, TokenType::FALSE, TokenType::NIL})) {
-        return LiteralExpr{previous()};
+LiteralExpr Parser::expression() {
+    return literal();
+}
+
+LiteralExpr Parser::literal() {
+    if (match(TokenType::STRING)) {
+        return {previous()};
+    }
+
+    if (match(TokenType::TRUE) || match(TokenType::FALSE) || match(TokenType::NIL)) {
+        return {previous()};
     }
 
     throw std::runtime_error("Expected literal value.");
 }
 
-bool Parser::match(std::initializer_list<TokenType> types) {
-    for (auto type : types) {
-        if (check(type)) {
-            advance();
-            return true;
-        }
+bool Parser::match(TokenType type) {
+    if (check(type)) {
+        advance();
+        return true;
     }
     return false;
 }
