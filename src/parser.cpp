@@ -1,27 +1,28 @@
 #include "parser.hpp"
 #include <stdexcept>
 
-std::shared_ptr<Expr> Parser::parse(const std::vector<Token>& tks) {
+Expr Parser::parse(const std::vector<Token>& tks) {
     tokens = tks;
+    current = 0;
     return expression();
 }
 
-std::shared_ptr<Expr> Parser::expression() {
+Expr Parser::expression() {
     if (match({TokenType::LEFT_PAREN})) {
-        auto expr = expression();
+        Expr inner = expression();
         if (!match({TokenType::RIGHT_PAREN})) {
             throw std::runtime_error("Expected ')' after expression.");
         }
-        return std::make_shared<GroupingExpr>(expr);
+        return GroupingExpr{inner};
     }
 
     return literal();
 }
 
-std::shared_ptr<Expr> Parser::literal() {
+Expr Parser::literal() {
     if (match({TokenType::STRING, TokenType::NUMBER,
                TokenType::TRUE, TokenType::FALSE, TokenType::NIL})) {
-        return std::make_shared<LiteralExpr>(previous());
+        return LiteralExpr{previous()};
     }
 
     throw std::runtime_error("Expected literal value.");

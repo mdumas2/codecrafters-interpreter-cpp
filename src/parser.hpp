@@ -6,35 +6,31 @@
 
 #include "token.hpp"
 
-struct Expr {
-    virtual ~Expr() = default;
-};
-
-struct LiteralExpr : Expr {
+struct LiteralExpr {
     Token value;
-    explicit LiteralExpr(const Token& value) : value(value) {}
 };
 
-struct GroupingExpr : Expr {
-    std::shared_ptr<Expr> expression;
-    explicit GroupingExpr(std::shared_ptr<Expr> expr) : expression(expr) {}
+struct GroupingExpr {
+    std::variant<LiteralExpr, GroupingExpr> expression;
 };
+
+using Expr = std::variant<LiteralExpr, GroupingExpr>;
 
 class Parser {
 public:
-    std::shared_ptr<Expr> parse(const std::vector<Token>& tks);
+    Expr parse(const std::vector<Token>& tokens);
 
 private:
     std::vector<Token> tokens;
     int current = 0;
 
-    std::shared_ptr<Expr> expression();
-    std::shared_ptr<Expr> literal();
+    Expr expression();
+    Expr literal();
 
-    const Token& peek();
-    const Token& previous();
+    bool match(std::initializer_list<TokenType> types);
+    bool check(TokenType type);
     const Token& advance();
     bool is_at_end();
-    bool check(TokenType type);
-    bool match(std::initializer_list<TokenType> types);
+    const Token& peek();
+    const Token& previous();
 };
