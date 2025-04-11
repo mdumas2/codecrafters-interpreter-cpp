@@ -63,15 +63,15 @@ std::pair<std::vector<Token>, int> Tokenizer::scan_tokens(std::string& src) {
 }
 
 std::string Tokenizer::get_name(TokenType type) {
-    auto it = get_map().find(type);
-    if (it != get_map().end()) {
+    auto it = lox::get_map().find(type);
+    if (it != lox::get_map().end()) {
         return it->second.name;
     }
     return "UNKNOWN";
 }
 
 TokenType Tokenizer::get_token_type_for_identifier(const std::string& word) {
-    for (const auto& [type, info] : get_map()) {
+    for (const auto& [type, info] : lox::get_map()) {
         if (info.is_keyword && info.lexeme == word) {
             return type;
         }
