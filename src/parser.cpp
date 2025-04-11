@@ -17,7 +17,7 @@ Expr Parser::expression() {
         }
 
         auto* group = new GroupingExpr{expr};
-        return Expr{ExprType::Grouping, .grouping = group};
+        return Expr{.type = ExprType::Grouping, .grouping = group};
     }
 
     return literal();
@@ -26,7 +26,7 @@ Expr Parser::expression() {
 Expr Parser::literal() {
     if (match(TokenType::STRING) || match(TokenType::TRUE) || match(TokenType::FALSE) || match(TokenType::NIL)) {
         auto* lit = new LiteralExpr{previous()};
-        return Expr{ExprType::Literal, .literal = lit};
+        return Expr{.type = ExprType::Literal, .literal = lit};
     }
 
     throw std::runtime_error("Expected literal value.");
