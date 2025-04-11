@@ -1,8 +1,8 @@
-#include "scanner.hpp"
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
+
+#include "tokenizer.hpp"
 
 std::string read_file_contents(const std::string& filename) {
     std::ifstream file(filename);
@@ -15,23 +15,15 @@ std::string read_file_contents(const std::string& filename) {
     return ss.str();
 }
 
-std::string format_token(const Token& token) {
-    return token.name + " " + token.lexeme + " " + (token.literal.empty() ? "null" : token.literal);
-}
-
-std::string format_token_lexeme(const Token& token) {
-    return token.literal.empty() ? token.lexeme : token.literal;
-}
-
 int main(int argc, char* argv[]) {
     std::cout << std::unitbuf;
-    std::cerr << std::unitbuf;
+     std::cerr << std::unitbuf;
 
     const std::string command = argv[1];
     std::string file_content = read_file_contents(argv[2]);
 
-    Scanner scanner;
-    auto [tokens, err] = scanner.scan_tokens(file_content);
+    Tokenizer tokenizer;
+    auto [tokens, err] = tokenizer.scan_tokens(file_content);
 
     if (command == "tokenize") {
         for (const auto& token : tokens) {
