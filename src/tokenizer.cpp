@@ -81,7 +81,7 @@ TokenType Tokenizer::get_token_type_for_identifier(const std::string& word) {
 
 void Tokenizer::add_token(TokenType type, const std::string& literal) {
     std::string lexeme = source.substr(start, current - start);
-    tokens.push_back({type, get_name(type), lexeme, literal, line});
+    tokens.push_back({type, get_name(type), lexeme, line});
 }
 
 char Tokenizer::advance() { return source[current++]; }
@@ -102,8 +102,8 @@ void Tokenizer::scan_string(int& ret_val) {
         return;
     }
 
-    advance(); // consume closing "
-    std::string literal = source.substr(start + 1, current - start - 2); // without quotes
+    advance();
+    std::string literal = source.substr(start + 1, current - start - 2);
 
     add_token(TokenType::STRING, literal);
 }
