@@ -2,6 +2,7 @@
 #define LOX_HPP
 
 #include "token.hpp"
+#include <iostream>
 #include <string>
 
 namespace lox {
