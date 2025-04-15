@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdexcept>
 #include "expr.hpp"
+#include "lox.hpp"
 #include "token.hpp"
 
 namespace lox {
