@@ -1,73 +1,50 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "token.hpp"
+#include "expr.hpp"
 
-
-struct LiteralExpr;
-struct GroupingExpr;
-
-enum class ExprType {
-    Literal,
-    Grouping
-};
-
-struct Expr {
-    ExprType type;
-
-    union {
-        LiteralExpr* literal;
-        GroupingExpr* grouping;
-    };
-
-    std::string to_string() const;
-};
-
-struct LiteralExpr {
-    Token value;
-
-    std::string to_string() const {
-        return value.literal;
-    }
-};
-
-struct GroupingExpr {
-    Expr expression;
-
-    std::string to_string() const {
-        return "(group " + expression.to_string() + ")";
-    }
-};
-
-inline std::string Expr::to_string() const {
-    switch (type) {
-        case ExprType::Literal:
-            return literal->to_string();
-        case ExprType::Grouping:
-            return grouping->to_string();
-        default:
-            return "";
-    }
-}
-
+#include <vector>
+#include <stdexcept>
 
 class Parser {
-public:
-    Expr parse(const std::vector<Token>& tokens);
-
 private:
-    std::vector<Token> tokens;
+    class ParseError : public std::runtime_error {
+    public:
+        ParseError() : std::runtime_error("") {}
+    };
+
+    const std::vector<Token>& tokens;
     int current = 0;
 
-    Expr expression();
-    Expr literal();
+    std::unique_ptr<Expr> expression();
+    std::unique_ptr<Expr> equality();
+    std::unique_ptr<Expr> comparison();
+    std::unique_ptr<Expr> term();
+    std::unique_ptr<Expr> factor();
+    std::unique_ptr<Expr> unary();
+    std::unique_ptr<Expr> primary();
 
-    bool match(TokenType type);
-    bool check(TokenType type);
-    const Token& advance();
-    bool is_at_end();
-    const Token& peek();
-    const Token& previous();
+    bool match(const std::vector<TokenType>& types);
+
+    Token consume(TokenType type, const std::string& message);
+
+    bool check(TokenType type) const;
+
+    Token advance();
+
+    bool isAtEnd() const;
+
+    Token peek() const;
+
+    Token previous() const;
+
+    ParseError error(const Token& token, const std::string& message);
+
+    void synchronize();
+
+
+public:
+    explicit Parser(const std::vector<Token>& tokens);
+
+    std::unique_ptr<Expr> parse();
 };
