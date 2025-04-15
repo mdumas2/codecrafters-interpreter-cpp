@@ -28,25 +28,20 @@ int main(int argc, char* argv[]) {
     Tokenizer tokenizer;
     auto [tokens, err] = tokenizer.scan_tokens(file_content);
 
-    Parser parser(tokens);
-
     if (command == "tokenize") {
         for (const auto& token : tokens) {
             std::cout << lox::format_token(token) << std::endl;
         }
     } else if (command == "parse"){
-        std::unique_ptr<Expr> expression = parser.parse();
-        if (lox::hadError) {
-            std::cerr << "Parsing failed.\n";
-            return;
+        lox::Parser parser(tokens);
+        auto expr = parser.parse();
+
+        if (expr && !lox::Lox::hadError) {
+            lox::AstPrinter printer;
+            std::cout << printer.print(*expr) << std::endl;
         }
 
-        if (expression) {
-            AstPrinter printer;
-            std::cout << "AST: " << printer.print(*expression) << std::endl;
-        } else {
-            std::cerr << "Parser returned null expression without setting hadError flag (internal error?).\n";
-        }
+        return lox::Lox::hadError ? 1 : 0;
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;

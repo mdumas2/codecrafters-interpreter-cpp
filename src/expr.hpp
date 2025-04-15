@@ -1,80 +1,93 @@
-#pragma once
+#ifndef EXPR_HPP
+#define EXPR_HPP
 
+#include <memory>
+#include <string>
+#include <variant>
+#include <vector>
 #include "token.hpp"
 
-#include <vector>
-#include <string>
-#include <memory>
-#include <any>
+namespace lox {
 
-struct Binary;
-struct Grouping;
-struct Literal;
-struct Unary;
+class Expr;
+class Binary;
+class Grouping;
+class Literal;
+class Unary;
 
-template <typename R>
+// Visitor interface for the Visitor pattern
 class ExprVisitor {
 public:
     virtual ~ExprVisitor() = default;
-
-    virtual R visitBinaryExpr(const Binary& expr) = 0;
-    virtual R visitGroupingExpr(const Grouping& expr) = 0;
-    virtual R visitLiteralExpr(const Literal& expr) = 0;
-    virtual R visitUnaryExpr(const Unary& expr) = 0;
+    virtual std::string visitBinaryExpr(const Binary& expr) = 0;
+    virtual std::string visitGroupingExpr(const Grouping& expr) = 0;
+    virtual std::string visitLiteralExpr(const Literal& expr) = 0;
+    virtual std::string visitUnaryExpr(const Unary& expr) = 0;
 };
 
-struct Expr {
+// Base expression class
+class Expr {
+public:
     virtual ~Expr() = default;
-    template <typename R>
-    R accept(ExprVisitor<R>& visitor) = 0;
+    virtual std::string accept(ExprVisitor& visitor) const = 0;
 };
 
-struct Binary : Expr {
-    std::unique_ptr<Expr> left;
-    Token op; 
-    std::unique_ptr<Expr> right;
+// Binary expression: left operator right
+class Binary : public Expr {
+public:
+    Binary(std::unique_ptr<Expr> left, Token operator_, std::unique_ptr<Expr> right)
+        : left(std::move(left)), operator_(operator_), right(std::move(right)) {}
 
-    Binary(std::unique_ptr<Expr> left, Token op, std::unique_ptr<Expr> right)
-        : left(std::move(left)), op(std::move(op)), right(std::move(right)) {}
-
-    template <typename R>
-    R accept(ExprVisitor<R>& visitor) {
+    std::string accept(ExprVisitor& visitor) const override {
         return visitor.visitBinaryExpr(*this);
     }
+
+    const std::unique_ptr<Expr> left;
+    const Token operator_;
+    const std::unique_ptr<Expr> right;
 };
 
-struct Grouping : Expr {
-    std::unique_ptr<Expr> expression;
-
-    explicit Grouping(std::unique_ptr<Expr> expression)
+// Grouping expression: (expression)
+class Grouping : public Expr {
+public:
+    Grouping(std::unique_ptr<Expr> expression)
         : expression(std::move(expression)) {}
 
-    template <typename R>
-    R accept(ExprVisitor<R>& visitor) {
+    std::string accept(ExprVisitor& visitor) const override {
         return visitor.visitGroupingExpr(*this);
     }
+
+    const std::unique_ptr<Expr> expression;
 };
 
-struct Literal : Expr {
-    std::any value;
+// Literal expression: number, string, true, false, nil
+class Literal : public Expr {
+public:
+    using Value = std::variant<std::monostate, double, std::string, bool>;
 
-    explicit Literal(std::any value) : value(std::move(value)) {}
+    Literal(Value value) : value(value) {}
 
-    template <typename R>
-    R accept(ExprVisitor<R>& visitor) {
+    std::string accept(ExprVisitor& visitor) const override {
         return visitor.visitLiteralExpr(*this);
     }
+
+    const Value value;
 };
 
-struct Unary : Expr {
-    Token op;
-    std::unique_ptr<Expr> right;
+// Unary expression: operator expression
+class Unary : public Expr {
+public:
+    Unary(Token operator_, std::unique_ptr<Expr> right)
+        : operator_(operator_), right(std::move(right)) {}
 
-    Unary(Token op, std::unique_ptr<Expr> right)
-        : op(std::move(op)), right(std::move(right)) {}
-
-    template <typename R>
-    R accept(ExprVisitor<R>& visitor) {
+    std::string accept(ExprVisitor& visitor) const override {
         return visitor.visitUnaryExpr(*this);
     }
+
+    const Token operator_;
+    const std::unique_ptr<Expr> right;
 };
+
+} // namespace lox
+
+#endif // EXPR_HPP
