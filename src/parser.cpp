@@ -5,8 +5,6 @@
 #include <vector>
 #include <initializer_list>
 
-namespace lox {
-
 Parser::Parser(const std::vector<Token>& tokens) : tokens(tokens) {}
 
 std::unique_ptr<Expr> Parser::parse() {
