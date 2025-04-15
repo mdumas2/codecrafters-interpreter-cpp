@@ -26,7 +26,7 @@ public:
 struct Expr {
     virtual ~Expr() = default;
     template <typename R>
-    virtual R accept(ExprVisitor<R>& visitor) = 0;
+    R accept(ExprVisitor<R>& visitor) = 0;
 };
 
 struct Binary : Expr {
@@ -38,7 +38,7 @@ struct Binary : Expr {
         : left(std::move(left)), op(std::move(op)), right(std::move(right)) {}
 
     template <typename R>
-    R accept(ExprVisitor<R>& visitor) override {
+    R accept(ExprVisitor<R>& visitor) {
         return visitor.visitBinaryExpr(*this);
     }
 };
@@ -50,7 +50,7 @@ struct Grouping : Expr {
         : expression(std::move(expression)) {}
 
     template <typename R>
-    R accept(ExprVisitor<R>& visitor) override {
+    R accept(ExprVisitor<R>& visitor) {
         return visitor.visitGroupingExpr(*this);
     }
 };
@@ -61,7 +61,7 @@ struct Literal : Expr {
     explicit Literal(std::any value) : value(std::move(value)) {}
 
     template <typename R>
-    R accept(ExprVisitor<R>& visitor) override {
+    R accept(ExprVisitor<R>& visitor) {
         return visitor.visitLiteralExpr(*this);
     }
 };
@@ -74,7 +74,7 @@ struct Unary : Expr {
         : op(std::move(op)), right(std::move(right)) {}
 
     template <typename R>
-    R accept(ExprVisitor<R>& visitor) override {
+    R accept(ExprVisitor<R>& visitor) {
         return visitor.visitUnaryExpr(*this);
     }
 };
